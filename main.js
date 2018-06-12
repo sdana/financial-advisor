@@ -42,16 +42,6 @@ const finAdv = Object.create({},{
     transaction: {
         //create new transaction, paramaters: (String, Int, Int, String)
         value: function (ticker, numShares, value, buyOrSell){
-            let transType
-            // switch (buyOrSell){
-            //     case ("buy"):
-            //         transType = true
-            //     break
-
-            //     case ("sell"):
-            //         transType = false
-            //     break
-            // }
             let newTrans = {symbol: ticker, shares: numShares, price: value, own: buyOrSell}
             this.portfolio.push(newTrans)
     }
@@ -121,6 +111,6 @@ const finAdv = Object.create({},{
         }
     },
 })
-finAdv.transaction("hfhf", 6000, 200, "buy")
-finAdv.transaction("goog", 3000, 100, "buy")
-finAdv.transaction("appl", 4000, 100, "sell")
+finAdv.modifyHoldings("uber", 6000, 200, "buy")
+finAdv.modifyHoldings("goog", 3000, 100, "buy")
+finAdv.modifyHoldings("appl", 4000, 100, "buy")
