@@ -43,16 +43,16 @@ const finAdv = Object.create({},{
         //create new transaction, paramaters: (String, Int, Int, String)
         value: function (ticker, numShares, value, buyOrSell){
             let transType
-            switch (buyOrSell){
-                case ("buy"):
-                    transType = true
-                break
+            // switch (buyOrSell){
+            //     case ("buy"):
+            //         transType = true
+            //     break
 
-                case ("sell"):
-                    transType = false
-                break
-            }
-            let newTrans = {symbol: ticker, shares: numShares, price: value, own: transType}
+            //     case ("sell"):
+            //         transType = false
+            //     break
+            // }
+            let newTrans = {symbol: ticker, shares: numShares, price: value, own: buyOrSell}
             this.portfolio.push(newTrans)
     }
     },
@@ -65,19 +65,23 @@ const finAdv = Object.create({},{
                     //check to see if ticker exists, if so modify number of shares
                     if (this.holdings[ticker]){    
                     this.holdings[ticker] = {symbol: ticker, shares: +numShares+this.holdings[ticker].shares, price: value,}
+                    this.transaction(ticker, numShares, value, buyOrSell)
                     break
                     }
                     //if the ticker does not exist, create it
                     else {
                         this.holdings[ticker] = {symbol: ticker, shares: numShares, price: value,}
+                        this.transaction(ticker, numShares, value, buyOrSell)
                     break
                     }    
 
                 case ("sell"):
                     //ensure ticker to modify exists
                     if (!this.holdings[ticker]){
+                        console.log("Cant sell something that doesn't exist")
                         break
                     }
+                    //if the number of shares to sell exceeds number of shares owned, do nothing
                     else if (this.holdings[ticker].shares-numShares < 0){
                         console.log("Cannot sell more than you own")
                         break
@@ -88,12 +92,11 @@ const finAdv = Object.create({},{
                         //if the modification causes the shares to reach 0, delete the ticker
                         if (this.holdings[ticker].shares === 0){
                             delete this.holdings[ticker]
-                        } 
+                        }
+                        this.transaction(ticker, numShares, value, buyOrSell)
                         break
                     }
             }
-            let newTrans = {symbol: ticker, shares: numShares, price: value, own: transType}
-            this.portfolio.push(newTrans)
     }
     },
     worth: {
@@ -104,7 +107,7 @@ const finAdv = Object.create({},{
             //iterate through portfolio array
             for (let i=0; i<this.portfolio.length; i++){
                 //check to see if stock was bought or sold
-                if (this.portfolio[i].own === true){
+                if (this.portfolio[i].own === "buy"){
                     //if bought, multiply the number of shares by the price
                     numTimesValue = this.portfolio[i].shares * this.portfolio[i].price
                     //push that value to temporary array
@@ -121,5 +124,3 @@ const finAdv = Object.create({},{
 finAdv.transaction("hfhf", 6000, 200, "buy")
 finAdv.transaction("goog", 3000, 100, "buy")
 finAdv.transaction("appl", 4000, 100, "sell")
-finAdv.worth()
-
